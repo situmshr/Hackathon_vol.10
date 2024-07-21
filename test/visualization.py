@@ -1,29 +1,22 @@
-# import geopandas as gpd
-# import matplotlib.pyplot as plt
-# import numpy as np
-
-# # ランダムデータの生成
-# data = np.random.integers[1000,5000](47)
-
-# # 日本の地理情報を取得
-# # (ここではGeoJSONファイルを使用する例)
-# url = 'https://raw.githubusercontent.com/dataofjapan/land/master/japan.geojson'
-# gdf = gpd.read_file(url)
-
-# # 都道府県データにランダムデータを追加
-# gdf['data'] = data
-
-# # ヒートマップの作成
-# fig, ax = plt.subplots(1, 1, figsize=(15, 10))
-# gdf.plot(column='data', cmap='OrRd', linewidth=0.8, ax=ax, edgecolor='0.8', legend=True)
-# plt.title('membership fee')
-# plt.show()
-
 import geopandas as gpd
+import matplotlib.pyplot as plt
+import numpy as np
 
-# 日本の地理情報を取得
-url = 'https://raw.githubusercontent.com/dataofjapan/land/master/japan.geojson'
-gdf = gpd.read_file(url)
+def create_heatmap(geojson_path, data, title):
 
-# GeoJSONファイルをローカルに保存
-gdf.to_file('japan_prefectures.geojson', driver='GeoJSON')
+    # GeoJSONファイルの読み込み
+    gdf = gpd.read_file(geojson_path)
+    gdf['data'] = data
+
+    # ヒートマップの作成
+    fig, ax = plt.subplots(1, 1, figsize=(15, 10))
+    gdf.plot(column='data', cmap='OrRd', linewidth=0.8, ax=ax, edgecolor='0.8', legend=True)
+    plt.title(title)
+    plt.show()
+
+#GeoJSONファイルpath
+AssetsPath = '../assets/japan_prefectures.geojson'
+#一旦、乱数で都道府県別価格を与える。本当はモデルが吐き出した値
+data = np.random.default_rng().integers(1000, 10000, 47)
+
+create_heatmap(AssetsPath, data, 'membership fee')
