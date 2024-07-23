@@ -1,11 +1,6 @@
 import numpy as np
-import matplotlib.pyplot as plt
 import gym
-from stable_baselines3 import PPO
-
-from utils_simulation import GroundTruthDynamics
-
-
+# from stable_baselines3 import PPO
 
 
 class GroundTruthDynamics:
@@ -82,22 +77,22 @@ class PriceOptimizationEnv(gym.Env):
 #     plt.ylabel("N")
 #     plt.show()
 
-if __name__ == "__main__":
-    P_min, P_max = 0, 5000
-    N_min, N_max = 0, 2000
-    k = 0.0025
+# if __name__ == "__main__":
+#     P_min, P_max = 0, 5000
+#     N_min, N_max = 0, 2000
+#     k = 0.0025
 
-    dynamics_gt = GroundTruthDynamics(P_min, P_max, N_min, N_max, k)
+#     dynamics_gt = GroundTruthDynamics(P_min, P_max, N_min, N_max, k)
 
-    env = PriceOptimizationEnv(dynamics_gt, P_min, P_max, N_min, N_max)
+#     env = PriceOptimizationEnv(dynamics_gt, P_min, P_max, N_min, N_max)
 
-    model = PPO("MlpPolicy", env, verbose=1)
-    model.learn(total_timesteps=10000)
+#     model = PPO("MlpPolicy", env, verbose=1)
+#     model.learn(total_timesteps=10000)
 
-    obs = env.reset()
-    for i in range(100):
-        action, _states = model.predict(obs)
-        obs, rewards, dones, info = env.step(action)
-        print(f'Step {i + 1}: Price = {obs[0]}, Demand = {obs[1]}, Reward = {rewards}')
+#     obs = env.reset()
+#     for i in range(100):
+#         action, _states = model.predict(obs)
+#         obs, rewards, dones, info = env.step(action)
+#         print(f'Step {i + 1}: Price = {obs[0]}, Demand = {obs[1]}, Reward = {rewards}')
 
     
