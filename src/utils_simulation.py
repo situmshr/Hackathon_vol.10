@@ -62,20 +62,20 @@ class PriceOptimizationEnv(gym.Env):
 
 
 
-# if __name__ == "__main__":
-#     import numpy as np
-#     import matplotlib.pyplot as plt
+if __name__ == "__main__":
+    import numpy as np
+    import matplotlib.pyplot as plt
 
-#     P_min, P_max = 0, 5000
-#     N_min, N_max = 200, 200000
+    P_min, P_max = 2000, 5000
+    N_min, N_max = 200, 200000
 
-#     dynamics_gt = GroundTruthDynamics(P_min, P_max, N_min, N_max, k=0.0025)
-#     P = np.linspace(P_min, P_max, 100)
-#     N = dynamics_gt(P)
-#     plt.plot(P, N)
-#     plt.xlabel("P")
-#     plt.ylabel("N")
-#     plt.show()
+    dynamics_gt = GroundTruthDynamics(P_min, P_max, N_min, N_max, k=0.0025)
+    P = np.linspace(P_min, P_max, 100)
+    N = dynamics_gt(P)
+    plt.plot(P, N)
+    plt.xlabel("P")
+    plt.ylabel("N")
+    plt.show()
 
 # if __name__ == "__main__":
 #     P_min, P_max = 0, 5000
