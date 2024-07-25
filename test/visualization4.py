@@ -108,17 +108,15 @@ def convert_to_heatmap(gdf):
     max_value = gdf['price'].max()
     gdf['price_rgb'] = gdf['price'].apply(lambda x: value_to_color(x, min_value, max_value))
 
-def make_data(geojson_path,price,demand,order):
+def make_data(geojson_path,price,demand,order,lng,lat):
     gdf = gpd.read_file(geojson_path)
     gdf['nam'] = pd.Categorical(gdf['nam'], categories=order, ordered=True)
     gdf = gdf.sort_values('nam').reset_index(drop=True)
 
     gdf['price'] = price
-    gdf['demand'] = demand
-    gdf = gdf.to_crs(epsg=3857)
-    gdf['lon'] = gdf.geometry.centroid.x
-    gdf['lat'] = gdf.geometry.centroid.y
-    # gdf = gdf.to_crs(epsg=4326)
+    gdf['demand'] = demand//15
+    gdf['lng'] = lng
+    gdf['lat'] = lat
     convert_to_heatmap(gdf)
     print(gdf)
     return gdf
@@ -127,7 +125,9 @@ def make_data(geojson_path,price,demand,order):
 # data = pd.read_csv('data.csv')
 geojson_path = '../assets/japan_prefectures.geojson'
 results_path = '../results/simulation_v3/month_1.csv'
+pos_path = '../assets/japan_prefectures_pos.csv'
 df = pd.read_csv(results_path)
+pos_df = pd.read_csv(pos_path)
 
 order = [
     "Hokkai Do", "Aomori Ken", "Iwate Ken", "Miyagi Ken", "Akita Ken", "Yamagata Ken", "Fukushima Ken", "Ibaraki Ken",
@@ -137,7 +137,7 @@ order = [
     "Okayama Ken", "Hiroshima Ken", "Yamaguchi Ken", "Tokushima Ken", "Kagawa Ken", "Ehime Ken", "Kochi Ken", 
     "Fukuoka Ken", "Saga Ken", "Nagasaki Ken", "Kumamoto Ken", "Oita Ken", "Miyazaki Ken", "Kagoshima Ken", "Okinawa Ken"
 ]
-data = make_data(geojson_path,df['Price'],df['Demand'],order)
+data = make_data(geojson_path,df['Price'],df['Demand'],order,pos_df['lng'],pos_df['lat'])
 # convert_to_heatmap(data)
 # ColumnLayer を使用して 3D バーグラフを作成
 layer = pdk.Layer(
@@ -146,7 +146,7 @@ layer = pdk.Layer(
     get_position=["lng", "lat"],
     get_elevation="demand",
     get_fill_color="price_rgb",
-    radius=5000,
+    radius=100000,
     elevation_scale=1,
     pickable=True,
     extruded=True,
@@ -155,7 +155,7 @@ layer = pdk.Layer(
 # デッキグラフのビューを設定
 view_state = pdk.ViewState(
     latitude=35.1,
-    longitude=139.1,
+    longitude=130.1,
     zoom=5,
     pitch=50,
 )
