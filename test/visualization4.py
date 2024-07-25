@@ -16,12 +16,12 @@ def value_to_color(value, min_value, max_value, cmap_name='Blues',alpha=0.5):
     return [int(255 * c) for c in rgba[:3]] + [int(255 * rgba[3])]
 
 # 数値データをヒートマップの色に変換
-def convert_to_heatmap(gdf):
-    min_value = gdf['price'].min()
-    max_value = gdf['price'].max()
+def convert_to_heatmap(gdf,all_price):
+    min_value = all_price.min()
+    max_value = all_price.max()
     gdf['price_rgb'] = gdf['price'].apply(lambda x: value_to_color(x, min_value, max_value))
 
-def make_data(geojson_path,price,demand,order,lng,lat):
+def make_data(geojson_path,price,demand,order,lng,lat,all_price):
     gdf = gpd.read_file(geojson_path)
     gdf['nam'] = pd.Categorical(gdf['nam'], categories=order, ordered=True)
     gdf = gdf.sort_values('nam').reset_index(drop=True)
@@ -30,16 +30,17 @@ def make_data(geojson_path,price,demand,order,lng,lat):
     gdf['demand'] = demand
     gdf['lng'] = lng
     gdf['lat'] = lat
-    convert_to_heatmap(gdf)
+    convert_to_heatmap(gdf,all_price)
     print(gdf)
     return gdf
 
 # CSVファイルの読み込み
 # data = pd.read_csv('data.csv')
 geojson_path = '../assets/japan_prefectures.geojson'
-results_path = '../results/simulation_v3/month_1.csv'
+# results_path = '../results/simulation_v3/month_1.csv'
+results_dir = '../results/simulation_v3'
 pos_path = '../assets/japan_prefectures_pos.csv'
-df = pd.read_csv(results_path)
+# df = pd.read_csv(results_path)
 pos_df = pd.read_csv(pos_path)
 
 order = [
@@ -50,34 +51,47 @@ order = [
     "Okayama Ken", "Hiroshima Ken", "Yamaguchi Ken", "Tokushima Ken", "Kagawa Ken", "Ehime Ken", "Kochi Ken", 
     "Fukuoka Ken", "Saga Ken", "Nagasaki Ken", "Kumamoto Ken", "Oita Ken", "Miyazaki Ken", "Kagoshima Ken", "Okinawa Ken"
 ]
-data = make_data(geojson_path,df['Price'],df['Demand'],order,pos_df['lng'],pos_df['lat'])
+all_df = []
+for i in range(1, 101):
+    df1 = []
+    results_path = os.path.join(results_dir, f'month_{i}.csv')
+    df1 = pd.read_csv(results_path)
+    all_df.append(df1)
+all_data = pd.concat(all_df, ignore_index=True)
+all_price = all_data['Price']
+    
+for month in range(1,101):
+    results_path = os.path.join(results_dir, f'month_{month}.csv')
+    df = pd.read_csv(results_path)
+    
+    data = make_data(geojson_path,df['Price'],df['Demand'],order,pos_df['lng'],pos_df['lat'],all_price)
 # convert_to_heatmap(data)
 # ColumnLayer を使用して 3D バーグラフを作成
-layer = pdk.Layer(
-    "ColumnLayer",
-    data=data,
-    get_position=["lng", "lat"],
-    get_elevation="demand",
-    get_fill_color="price_rgb",
-    radius=10000,
-    elevation_scale=0.07,
-    pickable=True,
-    extruded=True,
-)
+    layer = pdk.Layer(
+        "ColumnLayer",
+        data=data,
+        get_position=["lng", "lat"],
+        get_elevation="demand",
+        get_fill_color="price_rgb",
+        radius=10000,
+        elevation_scale=0.07,
+        pickable=True,
+        extruded=True,
+    )
 
-# デッキグラフのビューを設定
-view_state = pdk.ViewState(
-    latitude=36.1,
-    longitude=135.1,
-    zoom=5.1,
-    pitch=50,
-)
+    # デッキグラフのビューを設定
+    view_state = pdk.ViewState(
+        latitude=36.1,
+        longitude=135.1,
+        zoom=5.1,
+        pitch=50,
+    )
 
-# pydeck デッキグラフを作成
-deck = pdk.Deck(layers=[layer], initial_view_state=view_state)
+    # pydeck デッキグラフを作成
+    deck = pdk.Deck(layers=[layer], initial_view_state=view_state)
 
-# デッキグラフを HTML ファイルとして保存
-deck.to_html('deck_map.html')
+    # デッキグラフを HTML ファイルとして保存
+    deck.to_html(f'../html/deck_map_{month}.html')
 
 import webbrowser
-webbrowser.open('file:///Users/shota/programs/rand/Hackathon/Hackathon_vol.10/test/deck_map.html')
+webbrowser.open('file:///Users/shota/programs/rand/Hackathon/Hackathon_vol.10/html/deck_map.html')
