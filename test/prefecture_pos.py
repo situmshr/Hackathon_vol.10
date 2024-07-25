@@ -32,6 +32,6 @@ df = pd.DataFrame(data)
 result_path = DATA_DIR
 
 # CSVファイルに保存
-df.to_csv(os.path.join(result_path, 'japan_prefectures_pos.csv'), index=False)
+# df.to_csv(os.path.join(result_path, 'japan_prefectures_pos.csv'), index=False)
 
 print(f"データを {csv_path} に保存しました。")
