@@ -7,12 +7,13 @@ from path_info import DATA_DIR, OUTPUT_DIR
 import os
 
 # カラーマップの作成（数値データを色に変換する関数）
-def value_to_color(value, min_value, max_value, cmap_name='coolwarm'):
+def value_to_color(value, min_value, max_value, cmap_name='Blues',alpha=0.5):
     norm = plt.Normalize(vmin=min_value, vmax=max_value)
     cmap = plt.get_cmap(cmap_name)
-    rgba = cmap(norm(value))
+    rgba = list(cmap(norm(value)))
+    rgba[3] = alpha
     # matplotlibのRGBAをRGBに変換し、255スケールに変換
-    return [int(255 * c) for c in rgba[:3]]
+    return [int(255 * c) for c in rgba[:3]] + [int(255 * rgba[3])]
 
 # 数値データをヒートマップの色に変換
 def convert_to_heatmap(gdf):
