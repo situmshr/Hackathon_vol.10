@@ -103,10 +103,10 @@ def value_to_color(value, min_value, max_value, cmap_name='viridis'):
     return [int(255 * c) for c in rgba[:3]]
 
 # 数値データをヒートマップの色に変換
-def convert_to_heatmap(data):
-    min_value = data['price'].min()
-    max_value = data['price'].max()
-    data['price_rgb'] = data['price'].apply(lambda x: value_to_color(x, min_value, max_value))
+def convert_to_heatmap(gdf):
+    min_value = gdf['price'].min()
+    max_value = gdf['price'].max()
+    gdf['price_rgb'] = gdf['price'].apply(lambda x: value_to_color(x, min_value, max_value))
 
 def make_data(geojson_path,price,demand,order):
     gdf = gpd.read_file(geojson_path)
@@ -115,12 +115,16 @@ def make_data(geojson_path,price,demand,order):
 
     gdf['price'] = price
     gdf['demand'] = demand
+    gdf = gdf.to_crs(epsg=3857)
     gdf['lon'] = gdf.geometry.centroid.x
     gdf['lat'] = gdf.geometry.centroid.y
+    # gdf = gdf.to_crs(epsg=4326)
     convert_to_heatmap(gdf)
+    print(gdf)
+    return gdf
 
 # CSVファイルの読み込み
-data = pd.read_csv('data.csv')
+# data = pd.read_csv('data.csv')
 geojson_path = '../assets/japan_prefectures.geojson'
 results_path = '../results/simulation_v3/month_1.csv'
 df = pd.read_csv(results_path)
@@ -133,15 +137,15 @@ order = [
     "Okayama Ken", "Hiroshima Ken", "Yamaguchi Ken", "Tokushima Ken", "Kagawa Ken", "Ehime Ken", "Kochi Ken", 
     "Fukuoka Ken", "Saga Ken", "Nagasaki Ken", "Kumamoto Ken", "Oita Ken", "Miyazaki Ken", "Kagoshima Ken", "Okinawa Ken"
 ]
-
-convert_to_heatmap(data)
+data = make_data(geojson_path,df['Price'],df['Demand'],order)
+# convert_to_heatmap(data)
 # ColumnLayer を使用して 3D バーグラフを作成
 layer = pdk.Layer(
     "ColumnLayer",
     data=data,
     get_position=["lng", "lat"],
-    get_elevation="height",
-    get_fill_color="color_rgb",
+    get_elevation="demand",
+    get_fill_color="price_rgb",
     radius=5000,
     elevation_scale=1,
     pickable=True,
@@ -152,7 +156,7 @@ layer = pdk.Layer(
 view_state = pdk.ViewState(
     latitude=35.1,
     longitude=139.1,
-    zoom=10,
+    zoom=5,
     pitch=50,
 )
 
