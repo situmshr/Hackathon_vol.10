@@ -78,3 +78,6 @@ deck = pdk.Deck(layers=[layer], initial_view_state=view_state)
 
 # デッキグラフを HTML ファイルとして保存
 deck.to_html('deck_map.html')
+
+import webbrowser
+webbrowser.open('file:///Users/shota/programs/rand/Hackathon/Hackathon_vol.10/test/deck_map.html')
