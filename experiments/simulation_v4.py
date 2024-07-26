@@ -9,9 +9,6 @@ from sklearn.preprocessing import MinMaxScaler
 
 from src.utils_simulation import GroundTruthDynamics2
 
-
-
-
 class Experiment:
     def __init__(self, setting_dict):
         # Ground truth の 価格-需要 dynamics の設定
@@ -54,7 +51,8 @@ class Experiment:
                     'Prefecture_Name': p_name,
                     'Price': row['p_values'],
                     'Demand': row['n_values'],
-                    'Revenue': row['R_values']
+                    'Revenue': row['R_values'],
+                    'f_values': row['f_values']
                 })
 
         # ステップごとに CSV ファイルに保存
@@ -74,9 +72,11 @@ class Experiment:
         n_values = np.zeros(num_steps + 1)
         p_values = np.zeros(num_steps + 1)
         R_values = np.zeros(num_steps + 1)
+        f_values = np.zeros(num_steps + 1)  # f(p) の値を保存するリストを追加
         n_values[0] = n0
         p_values[0] = p0
         R_values[0] = p0 * n0
+        f_values[0] = f(p0)
 
         # シミュレーション実行
         for t in range(num_steps):
@@ -91,13 +91,15 @@ class Experiment:
             p_values[t + 1] = p_t_plus_1
             n_values[t + 1] = n_t_plus_1
             R_values[t + 1] = R_t_plus_1
+            f_values[t + 1] = f_p_t_plus_1  # f(p) の値を保存
         
         # 結果を DataFrame にまとめる
         results = pd.DataFrame({
             "step": np.arange(num_steps + 1),
             "p_values": p_values,
             "n_values": n_values,
-            "R_values": R_values
+            "R_values": R_values,
+            "f_values": f_values  # f(p) の値を追加
         })
         
         return results
@@ -127,10 +129,7 @@ class Experiment:
         self.postprocess(result_dict)
         print('\nFinish Experiment! ------------------------------------------------')
 
-
-
 if __name__ == '__main__':
-
     setting_dict = {
         'id': 'simulation_v4',
         'data_file': os.path.join(DATA_DIR, 'prefecture_data_with_pairs_info_v2.csv'),
