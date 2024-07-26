@@ -38,7 +38,7 @@ def make_data(geojson_path,price,demand,order,lng,lat,all_price):
 # data = pd.read_csv('data.csv')
 geojson_path = '../assets/japan_prefectures.geojson'
 # results_path = '../results/simulation_v3/month_1.csv'
-results_dir = '../results/simulation_v5/month-wise'
+results_dir = '../results/simulation_v4/month-wise'
 pos_path = '../assets/japan_prefectures_pos.csv'
 # df = pd.read_csv(results_path)
 pos_df = pd.read_csv(pos_path)
