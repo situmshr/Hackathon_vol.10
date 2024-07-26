@@ -1,8 +1,9 @@
 from PIL import Image
 import os
+from path_info import 
 
 # PNGファイルがあるフォルダのパス
-folder_path = '../js/pic/'
+folder_path = '../js/picv5/'
 # 出力GIFのファイルパス
 output_path = 'simulation_v3.gif'
 
