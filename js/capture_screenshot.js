@@ -22,9 +22,9 @@ const path = require('path');
   const page = await browser.newPage();
 
   
-  for (let i = 1; i <= 100; i++) {
+  for (let i = 0; i <= 100; i++) {
     const filePath = `file:///Users/shota/programs/rand/Hackathon/Hackathon_vol.10/html/deck_map_${i}.html`;
-    const screenshotPath = `/Users/shota/programs/rand/Hackathon/Hackathon_vol.10/js/pic/deck_map_${i}_screenshot.png`;
+    const screenshotPath = `/Users/shota/programs/rand/Hackathon/Hackathon_vol.10/js/picv4/deck_map_${i}_screenshot.png`;
 
     await page.goto(filePath);
     await page.waitForSelector('canvas');  // canvas要素の存在を待機

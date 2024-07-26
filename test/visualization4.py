@@ -38,7 +38,7 @@ def make_data(geojson_path,price,demand,order,lng,lat,all_price):
 # data = pd.read_csv('data.csv')
 geojson_path = '../assets/japan_prefectures.geojson'
 # results_path = '../results/simulation_v3/month_1.csv'
-results_dir = '../results/simulation_v3'
+results_dir = '../results/simulation_v4/month-wise'
 pos_path = '../assets/japan_prefectures_pos.csv'
 # df = pd.read_csv(results_path)
 pos_df = pd.read_csv(pos_path)
@@ -52,7 +52,7 @@ order = [
     "Fukuoka Ken", "Saga Ken", "Nagasaki Ken", "Kumamoto Ken", "Oita Ken", "Miyazaki Ken", "Kagoshima Ken", "Okinawa Ken"
 ]
 all_df = []
-for i in range(1, 101):
+for i in range(0, 101):
     df1 = []
     results_path = os.path.join(results_dir, f'month_{i}.csv')
     df1 = pd.read_csv(results_path)
@@ -60,7 +60,7 @@ for i in range(1, 101):
 all_data = pd.concat(all_df, ignore_index=True)
 all_price = all_data['Price']
     
-for month in range(1,101):
+for month in range(0,101):
     results_path = os.path.join(results_dir, f'month_{month}.csv')
     df = pd.read_csv(results_path)
     
@@ -74,7 +74,7 @@ for month in range(1,101):
         get_elevation="demand",
         get_fill_color="price_rgb",
         radius=10000,
-        elevation_scale=0.07,
+        elevation_scale=0.7,
         pickable=True,
         extruded=True,
     )
