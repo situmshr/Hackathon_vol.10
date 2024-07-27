@@ -8,3 +8,8 @@ chromedriver
 node_modules
 package-lock.json
 package.json
+.venv
+*.egg-info
+build
+.testenv
+dist
