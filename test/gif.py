@@ -5,7 +5,7 @@ import re
 # PNGファイルがあるフォルダのパス
 folder_path = '../js/picv4/'
 # 出力GIFのファイルパス
-output_path = 'gif/simulation_v4.gif'
+output_path = 'gif/simulation_v4_middle.gif'
 
 # 数字を抽出するための正規表現パターン
 pattern = re.compile(r'\d+')
@@ -21,4 +21,4 @@ files = sorted([f for f in os.listdir(folder_path) if f.endswith('.png')], key=s
 images = [Image.open(os.path.join(folder_path, file)) for file in files]
 
 # GIFを作成
-images[0].save(output_path, save_all=True, append_images=images[1:], optimize=False, duration=500, loop=0)
+images[0].save(output_path, save_all=True, append_images=images[1:], optimize=False, duration=100, loop=0)
