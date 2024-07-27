@@ -1,7 +1,9 @@
+
 import os
 import sys
-from .path_info import PROJECT_DIR, DATA_DIR, OUTPUT_DIR
-sys.path.append(PROJECT_DIR)
+from .path_info import path_parser
+# , PROJECT_DIR, DATA_DIR, OUTPUT_DIR
+# sys.path.append(".")
 
 import numpy as np
 import pandas as pd
@@ -36,8 +38,9 @@ class MatchPriceOptimizer:
         # Ground truth の 価格-需要 dynamics の設定
         # self.setting_dict = setting_dict
         self.train_steps = setting_dict['trainsteps']
-        self.data_dir = os.path.join(DATA_DIR, setting_dict['data_dir'])
-        self.output_dir = os.path.join(OUTPUT_DIR, setting_dict['output_dir'])
+        # self.data_dir = setting_dict.get(os.path.join(DATA_DIR, setting_dict['data_dir']))
+        # self.output_dir = os.path.join(OUTPUT_DIR, setting_dict['output_dir'])
+        self.data_dir, self.output_dir = path_parser(setting_dict['data_dir'],setting_dict['output_dir'],setting_dict.get('project_dir',os.getcwd()))
         self.dynamics_type = setting_dict.get('dynamics_type', 'Non-Linear')
 
         self.df_main = pd.read_csv(os.path.join(os.path.dirname(__file__), 'prefecture_data_with_pairs_info_v2.csv'), index_col=0)
@@ -123,7 +126,7 @@ class MatchPriceOptimizer:
         # return df_train
 
     def simulate(self, df_train, alpha, P_min, P_max, N_min, N_max, train_data_num):
-
+        # f_gt = None
         if self.dynamics_type == 'Linear':
             f_gt = GroundTruthDynamics1(P_min, P_max, N_min, N_max)
         elif self.dynamics_type == 'Non-Linear':
@@ -211,10 +214,11 @@ if __name__ == '__main__':
     # trainsteps : 何ヶ月分予測したいか
     # 
     setting_dict = {
+        'project_dir': os.getcwd(),
         'data_dir': 'data1',
-        'output_dir': 'moduletest_2',
-        'trainsteps': 100,
-        'dynamics_dype': 'linear'
+        'output_dir': 'moduletest_4',
+        'trainsteps': 10,
+        'dynamics_type': 'Non-Linear'
     }
 
     experiment = MatchPriceOptimizer(setting_dict)
