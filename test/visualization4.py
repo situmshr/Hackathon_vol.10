@@ -7,7 +7,7 @@ from path_info import DATA_DIR, OUTPUT_DIR
 import os
 
 # カラーマップの作成（数値データを色に変換する関数）
-def value_to_color(value, min_value, max_value, cmap_name='Blues',alpha=0.5):
+def value_to_color(value, min_value, max_value, cmap_name='bwr',alpha=0.5):
     norm = plt.Normalize(vmin=min_value, vmax=max_value)
     cmap = plt.get_cmap(cmap_name)
     rgba = list(cmap(norm(value)))
@@ -38,7 +38,7 @@ def make_data(geojson_path,price,demand,order,lng,lat,all_price):
 # data = pd.read_csv('data.csv')
 geojson_path = '../assets/japan_prefectures.geojson'
 # results_path = '../results/simulation_v3/month_1.csv'
-results_dir = '../results/simulation_v4/month-wise'
+results_dir = '../results/simulation_v5/month-wise'
 pos_path = '../assets/japan_prefectures_pos.csv'
 # df = pd.read_csv(results_path)
 pos_df = pd.read_csv(pos_path)
