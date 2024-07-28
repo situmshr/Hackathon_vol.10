@@ -3,9 +3,9 @@ import os
 import re
 
 # PNGファイルがあるフォルダのパス
-folder_path = '../js/picv4/'
+folder_path = '../js/picv5/'
 # 出力GIFのファイルパス
-output_path = 'gif/simulation_v4_middle.gif'
+output_path = 'gif/simulation_v5_middle.gif'
 
 # 数字を抽出するための正規表現パターン
 pattern = re.compile(r'\d+')
