@@ -14,3 +14,4 @@ df['total_ratio'] = df['Total_subs'] / df['Total_Population']
 #print(df)
 
 df.to_csv(os.path.join(DATA_DIR, 'prefecture_data_with_pairs_info_v2.csv'))
+
