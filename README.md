@@ -75,7 +75,7 @@ step,p_values,n_values
 
 ## 価格と利用者の推移
 サブスクの価格を一定にした時vs本システムで価格を動的に変化させた時の利用者の推移
-- 色 : 価格（青色：high, 白色 : low)
+- 色 : 価格（赤色：high, 青色 : low)
 - 高さ : 都道府県ごとの利用者数
 
 <img src="test/gif/simulation_v4_middle.gif" width="400"> <img src="test/gif/simulation_v5_middle.gif" width="400">
